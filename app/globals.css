@@ -87,3 +87,23 @@ body {
   border-color: var(--accent);
   outline: none;
 }
+
+/* 삭제(위험) 버튼 hover */
+.btn-danger {
+  transition: background 0.15s ease;
+}
+.btn-danger:hover {
+  background: #d94f4f;
+}
+
+/* 폴더 삭제 버튼 — 기본 숨김, hover 시 표시 */
+.folder-item .folder-delete-btn {
+  opacity: 0;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+.folder-item:hover .folder-delete-btn {
+  opacity: 1;
+}
+.folder-delete-btn:hover {
+  color: var(--error);
+}
