@@ -87,7 +87,8 @@ export default function Sidebar() {
           {folders.map((folder) => {
             const isActive = activeFolderId === folder.id
             return (
-              <li key={folder.id} className="folder-item relative">
+              /* group: 자식 요소의 group-hover 트리거 */
+              <li key={folder.id} className="group relative">
                 {/* 폴더 링크 */}
                 <Link
                   href={`/folder/${folder.id}`}
@@ -100,9 +101,9 @@ export default function Sidebar() {
                     <span className="truncate">{folder.name}</span>
                   </span>
 
-                  {/* 링크 수량 — hover 시 숨김 */}
+                  {/* 링크 수량 — hover 시 fade-out */}
                   <span
-                    className={`folder-count ml-2 shrink-0 rounded px-1.5 py-0.5 text-xs ${
+                    className={`ml-2 shrink-0 rounded px-1.5 py-0.5 text-xs transition-opacity group-hover:opacity-0 ${
                       isActive
                         ? 'bg-[var(--accent)] text-white'
                         : 'bg-[var(--hover-bg)] text-[var(--text-sub)]'
@@ -112,8 +113,8 @@ export default function Sidebar() {
                   </span>
                 </Link>
 
-                {/* 수정 / 삭제 버튼 그룹 — hover 시 표시 */}
-                <div className="folder-actions absolute right-2 top-1/2 flex -translate-y-1/2 items-center gap-0.5">
+                {/* 수정/삭제 버튼 그룹 — hover 시 fade-in */}
+                <div className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
                   {/* 수정 버튼 */}
                   <button
                     type="button"
