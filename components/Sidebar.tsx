@@ -4,8 +4,28 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useFolders } from '@/lib/folder-context'
+import EditFolderModal from './EditFolderModal'
 import DeleteFolderModal from './DeleteFolderModal'
 import type { Folder } from '@/lib/data'
+
+function PencilIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+    </svg>
+  )
+}
 
 function TrashIcon() {
   return (
@@ -32,6 +52,7 @@ function TrashIcon() {
 export default function Sidebar() {
   const pathname = usePathname()
   const { folders } = useFolders()
+  const [editingFolder, setEditingFolder] = useState<Folder | null>(null)
   const [deletingFolder, setDeletingFolder] = useState<Folder | null>(null)
 
   const isAllActive = pathname === '/'
@@ -78,8 +99,10 @@ export default function Sidebar() {
                     <span className="shrink-0 text-base">📁</span>
                     <span className="truncate">{folder.name}</span>
                   </span>
+
+                  {/* 링크 수량 — hover 시 숨김 */}
                   <span
-                    className={`ml-2 shrink-0 rounded px-1.5 py-0.5 text-xs ${
+                    className={`folder-count ml-2 shrink-0 rounded px-1.5 py-0.5 text-xs ${
                       isActive
                         ? 'bg-[var(--accent)] text-white'
                         : 'bg-[var(--hover-bg)] text-[var(--text-sub)]'
@@ -89,20 +112,41 @@ export default function Sidebar() {
                   </span>
                 </Link>
 
-                {/* 삭제 버튼 — hover 시 노출 */}
-                <button
-                  type="button"
-                  aria-label={`${folder.name} 폴더 삭제`}
-                  className="folder-delete-btn absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-[var(--text-sub)]"
-                  onClick={() => setDeletingFolder(folder)}
-                >
-                  <TrashIcon />
-                </button>
+                {/* 수정 / 삭제 버튼 그룹 — hover 시 표시 */}
+                <div className="folder-actions absolute right-2 top-1/2 flex -translate-y-1/2 items-center gap-0.5">
+                  {/* 수정 버튼 */}
+                  <button
+                    type="button"
+                    aria-label={`${folder.name} 폴더 수정`}
+                    className="folder-edit-btn rounded p-0.5 text-[var(--text-sub)]"
+                    onClick={() => setEditingFolder(folder)}
+                  >
+                    <PencilIcon />
+                  </button>
+
+                  {/* 삭제 버튼 */}
+                  <button
+                    type="button"
+                    aria-label={`${folder.name} 폴더 삭제`}
+                    className="folder-delete-btn rounded p-0.5 text-[var(--text-sub)]"
+                    onClick={() => setDeletingFolder(folder)}
+                  >
+                    <TrashIcon />
+                  </button>
+                </div>
               </li>
             )
           })}
         </ul>
       </aside>
+
+      {/* 수정 모달 */}
+      {editingFolder && (
+        <EditFolderModal
+          folder={editingFolder}
+          onClose={() => setEditingFolder(null)}
+        />
+      )}
 
       {/* 삭제 확인 모달 */}
       {deletingFolder && (
