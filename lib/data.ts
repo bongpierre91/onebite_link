@@ -11,6 +11,7 @@ export type Link = {
   url: string
   folderId: string
   createdAt: string
+  thumbnail: string | null
 }
 
 export const folders: Folder[] = [
@@ -30,6 +31,7 @@ export const mockLinks: Link[] = [
     url: 'https://nextjs.org',
     folderId: '1',
     createdAt: '2026.05.20',
+    thumbnail: null,
   },
   {
     id: '2',
@@ -39,6 +41,7 @@ export const mockLinks: Link[] = [
     url: 'https://tailwindcss.com',
     folderId: '1',
     createdAt: '2026.05.19',
+    thumbnail: null,
   },
   {
     id: '3',
@@ -48,6 +51,7 @@ export const mockLinks: Link[] = [
     url: 'https://figma.com',
     folderId: '2',
     createdAt: '2026.05.18',
+    thumbnail: null,
   },
   {
     id: '4',
@@ -57,6 +61,7 @@ export const mockLinks: Link[] = [
     url: 'https://platform.openai.com',
     folderId: '3',
     createdAt: '2026.05.17',
+    thumbnail: null,
   },
   {
     id: '5',
@@ -66,6 +71,7 @@ export const mockLinks: Link[] = [
     url: 'https://github.com',
     folderId: '1',
     createdAt: '2026.05.16',
+    thumbnail: null,
   },
   {
     id: '6',
@@ -75,6 +81,7 @@ export const mockLinks: Link[] = [
     url: 'https://vercel.com',
     folderId: '1',
     createdAt: '2026.05.15',
+    thumbnail: null,
   },
   {
     id: '7',
@@ -84,6 +91,7 @@ export const mockLinks: Link[] = [
     url: 'https://huggingface.co',
     folderId: '3',
     createdAt: '2026.05.14',
+    thumbnail: null,
   },
   {
     id: '8',
@@ -93,6 +101,7 @@ export const mockLinks: Link[] = [
     url: 'https://developer.mozilla.org',
     folderId: '5',
     createdAt: '2026.05.13',
+    thumbnail: null,
   },
   {
     id: '9',
@@ -102,5 +111,6 @@ export const mockLinks: Link[] = [
     url: 'https://dribbble.com',
     folderId: '2',
     createdAt: '2026.05.12',
+    thumbnail: null,
   },
 ]
