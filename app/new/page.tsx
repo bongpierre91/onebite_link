@@ -13,7 +13,7 @@ export default function NewPage() {
         <Sidebar />
 
         {/* 메인: 새 링크 폼 */}
-        <main className="flex flex-1 overflow-y-auto bg-gray-50">
+        <main className="flex flex-1 overflow-y-auto bg-[var(--bg)]">
           <NewLinkForm />
         </main>
       </div>

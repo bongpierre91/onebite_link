@@ -2,10 +2,11 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { folders } from '@/lib/data'
+import { useFolders } from '@/lib/folder-context'
 
 export default function Sidebar() {
   const pathname = usePathname()
+  const { folders } = useFolders()
 
   const isAllActive = pathname === '/'
   const activeFolderId = pathname.startsWith('/folder/')
@@ -13,49 +14,47 @@ export default function Sidebar() {
     : null
 
   return (
-    <aside className="flex w-56 flex-shrink-0 flex-col gap-1 overflow-y-auto border-r border-gray-200 bg-white p-3">
-      {/* All 버튼 */}
+    <aside className="flex w-52 shrink-0 flex-col gap-0.5 overflow-y-auto border-r border-[var(--border)] bg-[var(--card-bg)] px-2 py-3">
+      {/* All */}
       <Link
         href="/"
-        className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-          isAllActive
-            ? 'bg-blue-50 text-blue-600'
-            : 'text-gray-700 hover:bg-gray-100'
+        className={`nav-link flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm ${
+          isAllActive ? 'nav-link-active' : 'text-[var(--text)]'
         }`}
       >
-        <span>🗂️</span>
+        <span className="text-base">🗂️</span>
         All
       </Link>
 
       {/* 구분선 */}
-      <div className="my-2 border-t border-gray-100" />
+      <div className="my-2 border-t border-[var(--border)]" />
 
-      {/* 폴더 목록 */}
-      <p className="px-3 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400">
+      {/* 폴더 섹션 레이블 */}
+      <p className="px-3 pb-1 text-xs font-semibold uppercase tracking-wider text-[var(--text-sub)]">
         폴더
       </p>
-      <ul className="mt-1 flex flex-col gap-0.5">
+
+      {/* 폴더 목록 */}
+      <ul className="flex flex-col gap-0.5">
         {folders.map((folder) => {
           const isActive = activeFolderId === folder.id
           return (
             <li key={folder.id}>
               <Link
                 href={`/folder/${folder.id}`}
-                className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors ${
-                  isActive
-                    ? 'bg-blue-50 text-blue-600'
-                    : 'text-gray-700 hover:bg-gray-100'
+                className={`nav-link flex w-full items-center justify-between rounded-md px-3 py-1.5 text-sm ${
+                  isActive ? 'nav-link-active' : 'text-[var(--text)]'
                 }`}
               >
                 <span className="flex items-center gap-2">
-                  <span>📁</span>
+                  <span className="text-base">📁</span>
                   {folder.name}
                 </span>
                 <span
-                  className={`rounded-full px-1.5 py-0.5 text-xs ${
+                  className={`rounded px-1.5 py-0.5 text-xs ${
                     isActive
-                      ? 'bg-blue-100 text-blue-600'
-                      : 'bg-gray-100 text-gray-500'
+                      ? 'bg-[var(--accent)] text-white'
+                      : 'bg-[var(--hover-bg)] text-[var(--text-sub)]'
                   }`}
                 >
                   {folder.count}

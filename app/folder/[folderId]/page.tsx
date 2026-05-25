@@ -15,7 +15,7 @@ export default async function FolderPage(props: PageProps<'/folder/[folderId]'>)
         <Sidebar />
 
         {/* 메인: 해당 폴더의 링크 그리드 */}
-        <main className="flex-1 overflow-y-auto bg-gray-50">
+        <main className="flex-1 overflow-y-auto bg-[var(--bg)]">
           <LinkGrid folderId={folderId} />
         </main>
       </div>

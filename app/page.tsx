@@ -14,7 +14,7 @@ export default function Home() {
         <Sidebar />
 
         {/* 메인 섹션 */}
-        <main className="flex-1 overflow-y-auto bg-gray-50">
+        <main className="flex-1 overflow-y-auto bg-[var(--bg)]">
           <LinkGrid />
         </main>
       </div>
