@@ -1,18 +1,57 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useFolders } from '@/lib/folder-context'
+import { useLinks } from '@/lib/link-context'
+
+type OgData = {
+  title: string
+  description: string
+  image: string | null
+  url: string
+}
 
 export default function NewLinkForm() {
   const [url, setUrl] = useState('')
   const [folderId, setFolderId] = useState('')
-  const { folders } = useFolders()
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const { folders } = useFolders()
+  const { addLink } = useLinks()
+  const router = useRouter()
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    alert(
-      `저장 완료!\nURL: ${url}\n폴더: ${folders.find((f) => f.id === folderId)?.name ?? '없음'}`,
-    )
+    setLoading(true)
+
+    try {
+      // OG 정보 수집
+      const res = await fetch(`/api/og?url=${encodeURIComponent(url)}`)
+      const og: OgData = await res.json()
+
+      // 링크 저장
+      addLink({
+        title: og.title || url,
+        description: og.description || '',
+        url: og.url || url,
+        folderId,
+        thumbnail: og.image,
+      })
+
+      // 폴더가 선택된 경우 해당 폴더 페이지, 아니면 홈으로 이동
+      router.push(folderId ? `/folder/${folderId}` : '/')
+    } catch {
+      // 네트워크 오류 시 URL만으로 저장
+      addLink({
+        title: url,
+        description: '',
+        url,
+        folderId,
+        thumbnail: null,
+      })
+      router.push(folderId ? `/folder/${folderId}` : '/')
+    }
   }
 
   return (
@@ -37,7 +76,8 @@ export default function NewLinkForm() {
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               required
-              className="input-field w-full rounded-md border border-[var(--border)] px-3 py-2 text-base text-[var(--text)] placeholder:text-[var(--placeholder)]"
+              disabled={loading}
+              className="input-field w-full rounded-md border border-[var(--border)] px-3 py-2 text-base text-[var(--text)] placeholder:text-[var(--placeholder)] disabled:opacity-50"
             />
           </div>
 
@@ -50,7 +90,8 @@ export default function NewLinkForm() {
               id="folder"
               value={folderId}
               onChange={(e) => setFolderId(e.target.value)}
-              className="input-field w-full rounded-md border border-[var(--border)] bg-[var(--card-bg)] px-3 py-2 text-base text-[var(--text)]"
+              disabled={loading}
+              className="input-field w-full rounded-md border border-[var(--border)] bg-[var(--card-bg)] px-3 py-2 text-base text-[var(--text)] disabled:opacity-50"
             >
               <option value="">폴더를 선택하세요</option>
               {folders.map((folder) => (
@@ -65,9 +106,36 @@ export default function NewLinkForm() {
           <div className="pt-1">
             <button
               type="submit"
-              className="btn-accent w-full rounded-md bg-[var(--accent)] py-2.5 text-sm font-semibold text-white"
+              disabled={loading || !url.trim()}
+              className="btn-accent w-full rounded-md bg-[var(--accent)] py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
             >
-              저장
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg
+                    className="h-4 w-4 animate-spin"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8H4z"
+                    />
+                  </svg>
+                  링크 정보 수집 중...
+                </span>
+              ) : (
+                '저장'
+              )}
             </button>
           </div>
         </form>

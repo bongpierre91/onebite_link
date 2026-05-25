@@ -1,8 +1,8 @@
 'use client'
 
 import LinkCard from './LinkCard'
-import { mockLinks } from '@/lib/data'
 import { useFolders } from '@/lib/folder-context'
+import { useLinks } from '@/lib/link-context'
 
 type Props = {
   folderId?: string
@@ -10,10 +10,11 @@ type Props = {
 
 export default function LinkGrid({ folderId }: Props) {
   const { folders } = useFolders()
+  const { links } = useLinks()
 
   const filtered = folderId
-    ? mockLinks.filter((link) => link.folderId === folderId)
-    : mockLinks
+    ? links.filter((link) => link.folderId === folderId)
+    : links
 
   const folderName = folderId
     ? (folders.find((f) => f.id === folderId)?.name ?? '알 수 없는 폴더')

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useFolders } from '@/lib/folder-context'
+import { useLinks } from '@/lib/link-context'
 import EditFolderModal from './EditFolderModal'
 import DeleteFolderModal from './DeleteFolderModal'
 import type { Folder } from '@/lib/data'
@@ -52,6 +53,7 @@ function TrashIcon() {
 export default function Sidebar() {
   const pathname = usePathname()
   const { folders } = useFolders()
+  const { links } = useLinks()
   const [editingFolder, setEditingFolder] = useState<Folder | null>(null)
   const [deletingFolder, setDeletingFolder] = useState<Folder | null>(null)
 
@@ -86,8 +88,10 @@ export default function Sidebar() {
         <ul className="flex flex-col gap-0.5">
           {folders.map((folder) => {
             const isActive = activeFolderId === folder.id
+            // 링크 context에서 실시간 카운트 계산
+            const linkCount = links.filter((l) => l.folderId === folder.id).length
+
             return (
-              /* group: 자식 요소의 group-hover 트리거 */
               <li key={folder.id} className="group relative">
                 {/* 폴더 링크 */}
                 <Link
@@ -109,13 +113,12 @@ export default function Sidebar() {
                         : 'bg-[var(--hover-bg)] text-[var(--text-sub)]'
                     }`}
                   >
-                    {folder.count}
+                    {linkCount}
                   </span>
                 </Link>
 
                 {/* 수정/삭제 버튼 그룹 — hover 시 fade-in */}
                 <div className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
-                  {/* 수정 버튼 */}
                   <button
                     type="button"
                     aria-label={`${folder.name} 폴더 수정`}
@@ -124,8 +127,6 @@ export default function Sidebar() {
                   >
                     <PencilIcon />
                   </button>
-
-                  {/* 삭제 버튼 */}
                   <button
                     type="button"
                     aria-label={`${folder.name} 폴더 삭제`}
@@ -141,15 +142,12 @@ export default function Sidebar() {
         </ul>
       </aside>
 
-      {/* 수정 모달 */}
       {editingFolder && (
         <EditFolderModal
           folder={editingFolder}
           onClose={() => setEditingFolder(null)}
         />
       )}
-
-      {/* 삭제 확인 모달 */}
       {deletingFolder && (
         <DeleteFolderModal
           folder={deletingFolder}
