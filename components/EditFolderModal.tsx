@@ -11,6 +11,7 @@ type Props = {
 
 export default function EditFolderModal({ folder, onClose }: Props) {
   const [name, setName] = useState(folder.name)
+  const [submitting, setSubmitting] = useState(false)
   const { renameFolder } = useFolders()
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -31,13 +32,16 @@ export default function EditFolderModal({ folder, onClose }: Props) {
     return () => window.removeEventListener('keydown', handler)
   }, [onClose])
 
-  function handleSave() {
+  async function handleSave() {
     const trimmed = name.trim()
     if (!trimmed || trimmed === folder.name) {
       onClose()
       return
     }
-    renameFolder(folder.id, trimmed)
+    if (submitting) return
+    setSubmitting(true)
+    await renameFolder(folder.id, trimmed)
+    setSubmitting(false)
     onClose()
   }
 
@@ -82,10 +86,10 @@ export default function EditFolderModal({ folder, onClose }: Props) {
           <button
             type="button"
             onClick={handleSave}
-            disabled={!name.trim()}
+            disabled={!name.trim() || submitting}
             className="btn-accent flex-1 rounded-md bg-[var(--accent)] py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-40"
           >
-            저장
+            {submitting ? '저장 중…' : '저장'}
           </button>
         </div>
       </div>

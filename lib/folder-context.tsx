@@ -7,7 +7,7 @@ import type { Folder } from './data'
 type FolderContextType = {
   folders: Folder[]
   addFolder: (name: string) => Promise<void>
-  renameFolder: (id: string, newName: string) => void
+  renameFolder: (id: string, newName: string) => Promise<void>
   deleteFolder: (id: string) => void
 }
 
@@ -44,10 +44,18 @@ export function FolderProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  function renameFolder(id: string, newName: string) {
-    setFolders((prev) =>
-      prev.map((f) => (f.id === id ? { ...f, name: newName.trim() } : f)),
-    )
+  async function renameFolder(id: string, newName: string) {
+    const supabase = createClient()
+    const { error } = await supabase
+      .from('folder')
+      .update({ name: newName.trim() })
+      .eq('id', id)
+
+    if (!error) {
+      setFolders((prev) =>
+        prev.map((f) => (f.id === id ? { ...f, name: newName.trim() } : f)),
+      )
+    }
   }
 
   function deleteFolder(id: string) {
