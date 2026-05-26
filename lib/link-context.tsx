@@ -10,7 +10,7 @@ type UpdateLinkData = Pick<Link, 'title' | 'description' | 'folderId'>
 type LinkContextType = {
   links: Link[]
   addLink: (data: NewLinkData) => Promise<void>
-  deleteLink: (id: string) => void
+  deleteLink: (id: string) => Promise<void>
   updateLink: (id: string, data: UpdateLinkData) => Promise<void>
 }
 
@@ -68,8 +68,16 @@ export function LinkProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  function deleteLink(id: string) {
-    setLinks((prev) => prev.filter((l) => l.id !== id))
+  async function deleteLink(id: string) {
+    const supabase = createClient()
+    const { error } = await supabase
+      .from('link')
+      .delete()
+      .eq('id', id)
+
+    if (!error) {
+      setLinks((prev) => prev.filter((l) => l.id !== id))
+    }
   }
 
   async function updateLink(id: string, data: UpdateLinkData) {

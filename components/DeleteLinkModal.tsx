@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useLinks } from '@/lib/link-context'
 
 type Props = {
@@ -10,6 +10,7 @@ type Props = {
 }
 
 export default function DeleteLinkModal({ linkId, linkTitle, onClose }: Props) {
+  const [submitting, setSubmitting] = useState(false)
   const { deleteLink } = useLinks()
 
   // Escape 키로 닫기
@@ -21,8 +22,10 @@ export default function DeleteLinkModal({ linkId, linkTitle, onClose }: Props) {
     return () => window.removeEventListener('keydown', handler)
   }, [onClose])
 
-  function handleDelete() {
-    deleteLink(linkId)
+  async function handleDelete() {
+    if (submitting) return
+    setSubmitting(true)
+    await deleteLink(linkId)
     onClose()
   }
 
@@ -63,9 +66,10 @@ export default function DeleteLinkModal({ linkId, linkTitle, onClose }: Props) {
           <button
             type="button"
             onClick={handleDelete}
-            className="btn-danger flex-1 rounded-md bg-[var(--error)] py-2 text-sm font-medium text-white"
+            disabled={submitting}
+            className="btn-danger flex-1 rounded-md bg-[var(--error)] py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-60"
           >
-            삭제
+            {submitting ? '삭제 중…' : '삭제'}
           </button>
         </div>
       </div>
