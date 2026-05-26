@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { useFolders } from '@/lib/folder-context'
 import type { Folder } from '@/lib/data'
@@ -11,6 +11,7 @@ type Props = {
 }
 
 export default function DeleteFolderModal({ folder, onClose }: Props) {
+  const [submitting, setSubmitting] = useState(false)
   const { deleteFolder } = useFolders()
   const router = useRouter()
   const pathname = usePathname()
@@ -24,8 +25,10 @@ export default function DeleteFolderModal({ folder, onClose }: Props) {
     return () => window.removeEventListener('keydown', handler)
   }, [onClose])
 
-  function handleDelete() {
-    deleteFolder(folder.id)
+  async function handleDelete() {
+    if (submitting) return
+    setSubmitting(true)
+    await deleteFolder(folder.id)
     // 삭제된 폴더 페이지에 있으면 홈으로 이동
     if (pathname === `/folder/${folder.id}`) {
       router.push('/')
@@ -70,9 +73,10 @@ export default function DeleteFolderModal({ folder, onClose }: Props) {
           <button
             type="button"
             onClick={handleDelete}
-            className="btn-danger flex-1 rounded-md bg-[var(--error)] py-2 text-sm font-medium text-white"
+            disabled={submitting}
+            className="btn-danger flex-1 rounded-md bg-[var(--error)] py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-60"
           >
-            삭제
+            {submitting ? '삭제 중…' : '삭제'}
           </button>
         </div>
       </div>
