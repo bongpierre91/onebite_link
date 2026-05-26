@@ -31,7 +31,7 @@ export default function NewLinkForm() {
       const og: OgData = await res.json()
 
       // 링크 저장
-      addLink({
+      await addLink({
         title: og.title || url,
         description: og.description || '',
         url: og.url || url,
@@ -43,7 +43,7 @@ export default function NewLinkForm() {
       router.push(folderId ? `/folder/${folderId}` : '/')
     } catch {
       // 네트워크 오류 시 URL만으로 저장
-      addLink({
+      await addLink({
         title: url,
         description: '',
         url,
