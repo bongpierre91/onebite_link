@@ -6,11 +6,14 @@
       "PowerShell(Start-Process -FilePath \"cmd.exe\" -ArgumentList \"/c\", \"cd /d D:\\\\01_Skill_Up\\\\02_Projects\\\\03_onebite_link && npm run dev > D:\\\\tmp\\\\nextjs-dev.log 2>&1\" -WindowStyle Hidden)",
       "PowerShell(npm install *)",
       "Bash(claude mcp *)",
-      "Bash(npx skills *)"
+      "Bash(npx skills *)",
+      "mcp__supabase__list_tables",
+      "mcp__supabase__execute_sql",
+      "Bash(npx tsc *)"
     ]
   },
+  "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "supabase"
-  ],
-  "enableAllProjectMcpServers": true
+  ]
 }

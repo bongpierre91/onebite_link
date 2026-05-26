@@ -1,7 +1,6 @@
 export type Folder = {
   id: string
   name: string
-  count: number
 }
 
 export type Link = {
@@ -14,13 +13,6 @@ export type Link = {
   thumbnail: string | null
 }
 
-export const folders: Folder[] = [
-  { id: '1', name: '개발', count: 4 },
-  { id: '2', name: '디자인', count: 2 },
-  { id: '3', name: 'AI/ML', count: 2 },
-  { id: '4', name: '뉴스', count: 0 },
-  { id: '5', name: '학습', count: 1 },
-]
 
 export const mockLinks: Link[] = [
   {

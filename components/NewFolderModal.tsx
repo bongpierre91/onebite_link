@@ -9,6 +9,7 @@ type Props = {
 
 export default function NewFolderModal({ onClose }: Props) {
   const [name, setName] = useState('')
+  const [submitting, setSubmitting] = useState(false)
   const { addFolder } = useFolders()
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -26,9 +27,11 @@ export default function NewFolderModal({ onClose }: Props) {
     return () => window.removeEventListener('keydown', handler)
   }, [onClose])
 
-  function handleSave() {
-    if (!name.trim()) return
-    addFolder(name)
+  async function handleSave() {
+    if (!name.trim() || submitting) return
+    setSubmitting(true)
+    await addFolder(name)
+    setSubmitting(false)
     onClose()
   }
 
@@ -67,17 +70,18 @@ export default function NewFolderModal({ onClose }: Props) {
           <button
             type="button"
             onClick={onClose}
-            className="btn-secondary flex-1 rounded-md border border-[var(--border)] py-2 text-sm font-medium text-[var(--text)]"
+            disabled={submitting}
+            className="btn-secondary flex-1 rounded-md border border-[var(--border)] py-2 text-sm font-medium text-[var(--text)] disabled:opacity-40"
           >
             취소
           </button>
           <button
             type="button"
             onClick={handleSave}
-            disabled={!name.trim()}
+            disabled={!name.trim() || submitting}
             className="btn-accent flex-1 rounded-md bg-[var(--accent)] py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-40"
           >
-            저장
+            {submitting ? '저장 중…' : '저장'}
           </button>
         </div>
       </div>
