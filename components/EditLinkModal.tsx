@@ -23,6 +23,7 @@ export default function EditLinkModal({ link, onClose }: Props) {
   const [title, setTitle] = useState(link.title)
   const [description, setDescription] = useState(link.description)
   const [folderId, setFolderId] = useState(link.folderId)
+  const [submitting, setSubmitting] = useState(false)
 
   // Escape 키로 닫기
   useEffect(() => {
@@ -33,13 +34,15 @@ export default function EditLinkModal({ link, onClose }: Props) {
     return () => window.removeEventListener('keydown', handler)
   }, [onClose])
 
-  function handleSave() {
-    if (!title.trim()) return
-    updateLink(link.id, {
+  async function handleSave() {
+    if (!title.trim() || submitting) return
+    setSubmitting(true)
+    await updateLink(link.id, {
       title: title.trim(),
       description: description.trim(),
       folderId,
     })
+    setSubmitting(false)
     onClose()
   }
 
@@ -119,10 +122,10 @@ export default function EditLinkModal({ link, onClose }: Props) {
           <button
             type="button"
             onClick={handleSave}
-            disabled={!title.trim()}
+            disabled={!title.trim() || submitting}
             className="btn-accent flex-1 rounded-md bg-[var(--accent)] py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-40"
           >
-            저장
+            {submitting ? '저장 중…' : '저장'}
           </button>
         </div>
       </div>

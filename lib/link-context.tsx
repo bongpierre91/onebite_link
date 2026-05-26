@@ -11,7 +11,7 @@ type LinkContextType = {
   links: Link[]
   addLink: (data: NewLinkData) => Promise<void>
   deleteLink: (id: string) => void
-  updateLink: (id: string, data: UpdateLinkData) => void
+  updateLink: (id: string, data: UpdateLinkData) => Promise<void>
 }
 
 const LinkContext = createContext<LinkContextType | null>(null)
@@ -72,8 +72,20 @@ export function LinkProvider({ children }: { children: ReactNode }) {
     setLinks((prev) => prev.filter((l) => l.id !== id))
   }
 
-  function updateLink(id: string, data: UpdateLinkData) {
-    setLinks((prev) => prev.map((l) => (l.id === id ? { ...l, ...data } : l)))
+  async function updateLink(id: string, data: UpdateLinkData) {
+    const supabase = createClient()
+    const { error } = await supabase
+      .from('link')
+      .update({
+        title: data.title || null,
+        description: data.description || null,
+        folder_id: data.folderId ? parseInt(data.folderId) : null,
+      })
+      .eq('id', id)
+
+    if (!error) {
+      setLinks((prev) => prev.map((l) => (l.id === id ? { ...l, ...data } : l)))
+    }
   }
 
   return (
