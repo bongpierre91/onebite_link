@@ -111,3 +111,17 @@ body {
 .folder-delete-btn:hover {
   color: var(--error);
 }
+
+/* 인증 페이지 링크 */
+.auth-link {
+  transition: opacity 0.15s ease;
+}
+.auth-link:hover {
+  text-decoration: underline;
+  opacity: 0.8;
+}
+
+/* 입력 필드 플레이스홀더 */
+.input-field::placeholder {
+  color: var(--placeholder);
+}
