@@ -125,3 +125,19 @@ body {
 .input-field::placeholder {
   color: var(--placeholder);
 }
+
+/* 토스트 슬라이드 인 애니메이션 */
+@keyframes toast-slide-in {
+  from {
+    transform: translate(-50%, -120%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+.toast {
+  animation: toast-slide-in 0.22s ease-out forwards;
+}
