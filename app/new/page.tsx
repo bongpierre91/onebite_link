@@ -1,6 +1,11 @@
+import type { Metadata } from 'next'
 import Header from '@/components/Header'
 import Sidebar from '@/components/Sidebar'
 import NewLinkForm from '@/components/NewLinkForm'
+
+export const metadata: Metadata = {
+  title: '링크 추가',
+}
 
 export default function NewPage() {
   return (
