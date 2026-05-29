@@ -12,7 +12,9 @@
       "Bash(npx tsc *)",
       "PowerShell(Get-ChildItem D:\\\\01_Skill_Up\\\\02_Projects\\\\03_onebite_link\\\\src -Recurse | Where-Object { !$_.PSIsContainer } | Select-Object FullName)",
       "PowerShell(Get-ChildItem D:\\\\01_Skill_Up\\\\02_Projects\\\\03_onebite_link -Recurse -Exclude node_modules | Where-Object { !$_.PSIsContainer } | Select-Object FullName)",
-      "PowerShell(Get-ChildItem D:\\\\01_Skill_Up\\\\02_Projects\\\\03_onebite_link -Depth 4 | Where-Object { !$_.PSIsContainer -and $_.FullName -notmatch 'node_modules|\\\\.agents|\\\\.next|\\\\.claude' } | Select-Object FullName)"
+      "PowerShell(Get-ChildItem D:\\\\01_Skill_Up\\\\02_Projects\\\\03_onebite_link -Depth 4 | Where-Object { !$_.PSIsContainer -and $_.FullName -notmatch 'node_modules|\\\\.agents|\\\\.next|\\\\.claude' } | Select-Object FullName)",
+      "Bash(New-Item -ItemType Directory -Force \"D:\\\\01_Skill_Up\\\\02_Projects\\\\03_onebite_link\\\\app\\\\auth\\\\callback\")",
+      "Bash(Out-Null)"
     ]
   },
   "enableAllProjectMcpServers": true,
