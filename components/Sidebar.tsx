@@ -173,7 +173,7 @@ export default function Sidebar() {
           </ul>
         </div>
 
-        {/* 하단 고정: 로그아웃 버튼 */}
+        {/* 하단 고정: 로그아웃 버튼 + 개인정보 처리방침 */}
         <div className="px-2 py-3 border-t border-[var(--border)]">
           <button
             type="button"
@@ -184,6 +184,12 @@ export default function Sidebar() {
             <LogoutIcon />
             {logoutLoading ? '로그아웃 중...' : '로그아웃'}
           </button>
+          <Link
+            href="/privacy"
+            className="mt-2 block px-3 text-center text-xs text-[var(--text-sub)] hover:underline"
+          >
+            개인정보 처리방침
+          </Link>
         </div>
       </aside>
 

@@ -147,6 +147,13 @@ export default function SignupPage() {
                 로그인
               </Link>
             </p>
+
+            {/* 개인정보 처리방침 */}
+            <p className="mt-3 text-center text-xs text-[var(--text-sub)]">
+              <Link href="/privacy" className="hover:underline">
+                개인정보 처리방침
+              </Link>
+            </p>
           </div>
         </div>
       </div>
