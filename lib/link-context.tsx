@@ -33,20 +33,42 @@ function toLink(row: Record<string, unknown>): Link {
 
 export function LinkProvider({ children }: { children: ReactNode }) {
   const [links, setLinks] = useState<Link[]>([])
+  const [userId, setUserId] = useState<string | null>(null)
 
-  // Supabase에서 링크 초기 로드 (최신순)
+  // 인증 상태 구독 — 계정이 바뀌면 userId 업데이트
   useEffect(() => {
+    const supabase = createClient()
+
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUserId(user?.id ?? null)
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUserId(session?.user.id ?? null)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  // userId가 바뀔 때마다 해당 유저의 링크만 새로 조회
+  useEffect(() => {
+    if (!userId) {
+      setLinks([])
+      return
+    }
+
     const supabase = createClient()
     supabase
       .from('link')
       .select('*')
+      .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .then(({ data }) => {
         if (data) {
           setLinks(data.map(toLink))
         }
       })
-  }, [])
+  }, [userId])
 
   // Supabase에 링크 추가
   async function addLink(data: NewLinkData) {

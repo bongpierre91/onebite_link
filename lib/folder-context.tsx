@@ -15,20 +15,42 @@ const FolderContext = createContext<FolderContextType | null>(null)
 
 export function FolderProvider({ children }: { children: ReactNode }) {
   const [folders, setFolders] = useState<Folder[]>([])
+  const [userId, setUserId] = useState<string | null>(null)
 
-  // Supabase에서 폴더 목록 초기 로드
+  // 인증 상태 구독 — 계정이 바뀌면 userId 업데이트
   useEffect(() => {
+    const supabase = createClient()
+
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUserId(user?.id ?? null)
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUserId(session?.user.id ?? null)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  // userId가 바뀔 때마다 해당 유저의 폴더만 새로 조회
+  useEffect(() => {
+    if (!userId) {
+      setFolders([])
+      return
+    }
+
     const supabase = createClient()
     supabase
       .from('folder')
       .select('id, name')
+      .eq('user_id', userId)
       .order('created_at', { ascending: true })
       .then(({ data }) => {
         if (data) {
           setFolders(data.map((f) => ({ id: String(f.id), name: f.name })))
         }
       })
-  }, [])
+  }, [userId])
 
   // Supabase에 폴더 추가
   async function addFolder(name: string) {
